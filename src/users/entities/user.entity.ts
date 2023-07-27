@@ -8,7 +8,7 @@ export class User {
   id: number;
 
   @ApiProperty({ example: 'expample@gmail.com', description: 'Email' })
-  @Column()
+  @Column({ unique: true })
   email: string;
 
   @ApiProperty({ example: 'qwerty123', description: 'Пароль' })
@@ -17,7 +17,15 @@ export class User {
 
   @ApiProperty({ example: 'John', description: 'Имя' })
   @Column({ nullable: true })
-  name: string;
+  firstName: string;
+
+  @ApiProperty({ example: 'Doe', description: 'Фамилия' })
+  @Column({ nullable: true })
+  lastName: string;
+
+  @ApiProperty({ example: '221B Baker Street', description: 'Адрес' })
+  @Column({ nullable: true })
+  address: string;
 
   @ApiProperty({ example: '(541) 754-3010', description: 'Номер телефона' })
   @Column({ nullable: true })
