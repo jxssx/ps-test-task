@@ -12,24 +12,24 @@ export class User {
   email: string;
 
   @ApiProperty({ example: 'qwerty123', description: 'Пароль' })
-  @Column()
+  @Column({ select: false })
   password: string;
 
   @ApiProperty({ example: 'John', description: 'Имя' })
   @Column({ nullable: true })
-  firstName: string;
+  firstName: string | null;
 
   @ApiProperty({ example: 'Doe', description: 'Фамилия' })
   @Column({ nullable: true })
-  lastName: string;
+  lastName: string | null;
 
   @ApiProperty({ example: '221B Baker Street', description: 'Адрес' })
   @Column({ nullable: true })
-  address: string;
+  address: string | null;
 
   @ApiProperty({ example: '(541) 754-3010', description: 'Номер телефона' })
   @Column({ nullable: true })
-  phone: string;
+  phone: string | null;
 
   @ApiProperty({
     example: 'I like corn',

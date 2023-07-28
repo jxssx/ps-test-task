@@ -2,8 +2,9 @@ import { ConflictException, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { User } from './entities/user.entity';
 import { Repository } from 'typeorm';
-import { createUserDto } from './dto/createUser.dto';
+import { CreateUserDto } from './dto/createUser.dto';
 import { hash } from 'bcrypt';
+import { UpdateUserDto } from './dto/updateUser.dto';
 
 @Injectable()
 export class UsersService {
@@ -11,9 +12,8 @@ export class UsersService {
     @InjectRepository(User) private usersRepository: Repository<User>,
   ) {}
 
-  async createUser(createUserDto: createUserDto): Promise<User> {
-    const { email, password } = createUserDto;
-    const existingUser = this.usersRepository.findOne({ where: { email } });
+  async createUser({ email, password }: CreateUserDto): Promise<User> {
+    const existingUser = await this.getUserByEmail(email);
     if (existingUser) {
       throw new ConflictException('User already exists');
     }
@@ -26,12 +26,13 @@ export class UsersService {
     return this.usersRepository.save(newUser);
   }
 
-  async getAllUsers(): Promise<User[]> {
-    return await this.usersRepository.find();
-  }
-
   async getUserByEmail(email: string): Promise<User | undefined> {
     const user = await this.usersRepository.findOne({ where: { email } });
     return user;
+  }
+
+  async updateUser(email: string, updateUserDto: UpdateUserDto) {
+    await this.usersRepository.update({ email }, updateUserDto);
+    return await this.getUserByEmail(email);
   }
 }
