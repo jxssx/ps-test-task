@@ -8,10 +8,10 @@ import { UsersModule } from './users/users.module';
   imports: [
     TypeOrmModule.forRoot({
       type: 'postgres',
-      host: process.env.TYPEORM_HOST,
-      port: Number(process.env.TYPEORM_PORT),
-      username: process.env.TYPEORM_USER,
-      password: process.env.TYPEORM_PASSWORD,
+      host: process.env.POSTGRES_HOST,
+      port: Number(process.env.POSTGRES_PORT),
+      username: process.env.POSTGRES_USER,
+      password: process.env.POSTGRES_PASSWORD,
       database: 'ps-test-task',
       entities: ['dist/**/*.entity.js'],
       synchronize: true,
