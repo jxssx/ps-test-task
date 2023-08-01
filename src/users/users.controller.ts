@@ -24,6 +24,7 @@ export class UsersController {
   @UseGuards(AuthGuard)
   @Get('/profile')
   async getLoggedUser(@Request() req): Promise<User> {
+    console.log(req.user.email);
     return await this.usersService.getUserByEmail(req.user.email);
   }
 
