@@ -84,7 +84,7 @@ module.exports = configure(function (/* ctx */) {
       proxy: {
         // proxy all requests starting with /api to jsonplaceholder
         '/api': {
-          target: 'http://localhost:10000',
+          target: 'https://pyshop-test-task.onrender.com',
           changeOrigin: true,
           pathRewrite: {
             '^/api': '',

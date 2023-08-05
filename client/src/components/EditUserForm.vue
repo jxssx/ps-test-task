@@ -70,9 +70,8 @@
 <script lang="ts">
 import { QVueGlobals, useQuasar } from 'quasar';
 import { useStore } from 'src/store';
-import { computed, defineComponent, ref } from 'vue';
+import { computed, defineComponent, ref, shallowRef, watchEffect } from 'vue';
 import { isValidPhoneNumber } from 'src/utils/validators';
-import _ from 'lodash';
 
 let $q: QVueGlobals;
 
@@ -81,21 +80,46 @@ export default defineComponent({
   setup() {
     const $store = useStore();
     const me = computed(() => $store.getters['auth/getMe']);
-    const userInfo = ref({
-      firstName: me.value.firstName,
-      lastName: me.value.lastName,
-      address: me.value.address,
-      phone: me.value.phone,
-      extra: me.value.extra,
+
+    const initialUserInfo = shallowRef({
+      firstName: '',
+      lastName: '',
+      address: '',
+      phone: '',
+      extra: '',
     });
-    const userInfoPrevious = _.clone(userInfo.value);
+
+    const userInfo = ref({
+      ...initialUserInfo.value
+    });
+
+    const isUserInfoChanged = computed(() => (
+      userInfo.value.firstName !== initialUserInfo.value.firstName ||
+      userInfo.value.lastName !== initialUserInfo.value.lastName ||
+      userInfo.value.address !== initialUserInfo.value.address ||
+      userInfo.value.phone !== initialUserInfo.value.phone ||
+      userInfo.value.extra !== initialUserInfo.value.extra
+    ));
+
+    watchEffect(() => {
+      if (me.value) {
+        userInfo.value.firstName = me.value.firstName;
+        userInfo.value.lastName = me.value.lastName;
+        userInfo.value.address = me.value.address;
+        userInfo.value.phone = me.value.phone;
+        userInfo.value.extra = me.value.extra;
+
+        initialUserInfo.value = { ...me.value };
+      }
+    });
+
     const onSubmit = () => {
-      if (!isValidPhoneNumber(userInfo.value.phone)) {
+      if (userInfo.value.phone && !isValidPhoneNumber(userInfo.value.phone)) {
         $q.notify({
           type: 'negative',
           message: 'Введите корректный номер телефона',
         });
-      } else if (_.isEqual(userInfoPrevious, userInfo.value)) {
+      } else if (!isUserInfoChanged.value) {
         $q.notify({
           type: 'warning',
           message: 'Пожалуйста, измените данные перед попыткой сохранения',
@@ -108,6 +132,7 @@ export default defineComponent({
         });
       }
     };
+
     return { userInfo, onSubmit };
   },
   mounted() {

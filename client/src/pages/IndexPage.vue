@@ -19,7 +19,11 @@ export default defineComponent({
     const isAuthenticated = computed(
       () => $store.getters['auth/isAuthenticated']
     );
-    return { isAuthenticated };
+    const me= computed(
+      () => $store.getters['auth/getMe']
+    );
+    console.log(me);
+    return { isAuthenticated, me };
   },
   components: { EditUserForm },
 });

@@ -9,13 +9,14 @@ import { api } from 'boot/axios';
 export default defineComponent({
   name: 'App',
   beforeCreate() {
-    this.$store.dispatch('auth/init');
-    const token = this.$store.getters.getToken;
-    if (token) {
-      api.defaults.headers.common.Authorization = 'JWT ' + token.access;
-    } else {
-      api.defaults.headers.common.Authorization = '';
-    }
+      this.$store.dispatch('auth/init');
+      const token = this.$store.getters['auth/getToken'];
+      console.log(token);
+      if (token) {
+        api.defaults.headers.common.Authorization = 'Bearer ' + token.access;
+      } else {
+        api.defaults.headers.common.Authorization = '';
+      }
   },
 });
 </script>

@@ -47,7 +47,7 @@ const actions: ActionTree<AuthStateInterface, StateInterface> = {
     if (token) {
       commit('setToken', token);
       api.defaults.headers.common.Authorization = 'Bearer ' + token;
-      dispatch('getMe', token);
+      await dispatch('getMe', token);
     } else {
       commit('removeToken');
     }
